@@ -207,7 +207,16 @@
   }
   .clear-btn:active { background: #efe8e2; }
 
-  .hist-list { display: flex; flex-direction: column; gap: 12px; max-height: 440px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .hist-list { display: flex; flex-direction: column; gap: 12px; }
+  .hist-list.scroll { max-height: 540px; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-right: 2px; }
+  .more-btn {
+    display: none; width: 100%; margin-top: 14px; min-height: 46px;
+    background: var(--paper); border: 1px solid var(--line);
+    color: var(--ink-2); border-radius: 13px;
+    font-family: var(--sans); font-size: 14.5px; font-weight: 600; letter-spacing: 0.3px;
+    cursor: pointer; transition: background .15s;
+  }
+  .more-btn:active { background: #efe8e2; }
   .hist-empty {
     text-align: center; color: var(--ink-3);
     font-size: 14px; letter-spacing: 0.2px; line-height: 1.6;
@@ -326,6 +335,7 @@
     <button id="clearBtn" class="clear-btn">清空</button>
   </div>
   <div id="histList" class="hist-list"></div>
+  <button id="moreBtn" class="more-btn"></button>
 
   <div class="footer-note">
     台幣 = 日圓 &times; 匯率　·　保留最近 <b>100</b> 筆紀錄<br>
@@ -350,7 +360,10 @@
   var saveBtn = document.getElementById('saveBtn');
   var clearBtn = document.getElementById('clearBtn');
   var histList = document.getElementById('histList');
+  var moreBtn = document.getElementById('moreBtn');
   var histCount = document.getElementById('histCount');
+  var SHOWN = 10;
+  var expanded = false;
   var toast = document.getElementById('toast');
 
   function fmt(n) { return isFinite(n) ? Math.round(n).toLocaleString('en-US') : '0'; }
@@ -393,11 +406,14 @@
   function renderHist() {
     histCount.textContent = history.length ? '（' + history.length + ' 筆）' : '';
     if (!history.length) {
+      histList.classList.remove('scroll');
       histList.innerHTML = '<div class="hist-empty">還沒有紀錄，打完金額按「記錄這筆」就會出現在這裡</div>';
+      moreBtn.style.display = 'none';
       return;
     }
+    var limit = expanded ? history.length : Math.min(SHOWN, history.length);
     var html = '';
-    for (var i = 0; i < history.length; i++) {
+    for (var i = 0; i < limit; i++) {
       var it = history[i];
       html += '<div class="hist-item">' +
         '<button class="del" data-id="' + it.id + '" aria-label="刪除這筆">&times;</button>' +
@@ -413,6 +429,17 @@
       '</div>';
     }
     histList.innerHTML = html;
+
+    if (history.length > SHOWN) {
+      moreBtn.style.display = 'block';
+      moreBtn.textContent = expanded
+        ? '收合（只看最新 ' + SHOWN + ' 筆）'
+        : '顯示全部 ' + history.length + ' 筆 ▾';
+      histList.classList.toggle('scroll', expanded);
+    } else {
+      moreBtn.style.display = 'none';
+      histList.classList.remove('scroll');
+    }
   }
 
   function showToast(msg) {
@@ -460,8 +487,14 @@
     renderHist();
   });
 
+  moreBtn.addEventListener('click', function () {
+    expanded = !expanded;
+    renderHist();
+  });
+
   clearBtn.addEventListener('click', function () {
     if (!history.length) return;
+    expanded = false;
     if (confirm('確定要清空所有紀錄嗎？')) {
       history = [];
       saveHist(history);
