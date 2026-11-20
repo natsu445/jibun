@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>日圓換台幣計算機</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f2ee;
+    --paper: #ffffff;
+
+    /* 文字層級（皆通過 AA 對比） */
+    --ink: #38333d;        /* 主要文字 / 數字 */
+    --ink-2: #554f5a;      /* 次要文字：標籤、說明 */
+    --ink-3: #726b76;      /* 輔助文字：時間、footer */
+    --hairline: #ded4cc;   /* 僅裝飾線條用 */
+    --line: #e9e1da;
+
+    --blue: #3f6d90;       /* 雛菊（加深以利判讀） */
+    --blue-bg: #eef4f8;
+    --rose: #b35a55;       /* 鬱金香 */
+    --rose-bg: #f8edec;
+    --gold: #a9792d;       /* 向日葵 */
+    --gold-bg: #f8f0e1;
+
+    --serif: "Noto Serif TC", Georgia, "Songti TC", serif;
+    --sans: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "PingFang TC", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { min-height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px 56px;
+    position: relative;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed; inset: 0; z-index: -2;
+    background:
+      radial-gradient(42% 30% at 12% 8%, rgba(63,109,144,0.12), transparent 70%),
+      radial-gradient(40% 28% at 92% 42%, rgba(179,90,85,0.11), transparent 72%),
+      radial-gradient(48% 32% at 50% 104%, rgba(169,121,45,0.12), transparent 70%);
+  }
+  body::after {
+    content: "";
+    position: fixed; inset: 0; z-index: -1; opacity: 0.4; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  .wrap { width: 100%; max-width: 480px; }
+
+  .head { text-align: center; margin-bottom: 26px; }
+  h1 {
+    font-family: var(--serif);
+    font-size: 24px; font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--ink);
+  }
+  .rule { width: 40px; height: 2px; background: var(--rose); opacity: 0.55; margin: 12px auto 0; border-radius: 2px; }
+  .sub {
+    font-size: 14px; color: var(--ink-2);
+    letter-spacing: 0.3px; margin-top: 14px; line-height: 1.5;
+  }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(56,51,61,0.06);
+  }
+
+  .input-card { padding: 22px 20px 20px; margin-bottom: 20px; }
+  .label {
+    font-size: 14px; font-weight: 500;
+    color: var(--ink-2); letter-spacing: 0.3px; margin-bottom: 12px;
+  }
+  .yen-row {
+    display: flex; align-items: center;
+    background: #fbf9f7;
+    border: 1.5px solid var(--line);
+    border-radius: 15px;
+    padding: 8px 16px;
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .yen-row:focus-within { border-color: var(--rose); box-shadow: 0 0 0 4px rgba(179,90,85,0.12); }
+  .yen-symbol { font-size: 30px; font-weight: 500; color: var(--ink-3); margin-right: 10px; }
+  #yen {
+    flex: 1; width: 100%; min-width: 0;
+    background: transparent; border: none; outline: none;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 40px; font-weight: 700; letter-spacing: 0.5px;
+  }
+  #yen::placeholder { color: #c7bdb6; font-weight: 500; }
+
+  .save-btn {
+    width: 100%; margin-top: 16px; min-height: 52px;
+    background: var(--rose);
+    color: #fff; border: none; border-radius: 14px;
+    padding: 14px;
+    font-family: var(--sans);
+    font-size: 17px; font-weight: 700; letter-spacing: 2px;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(179,90,85,0.28);
+    transition: filter .15s, transform .05s, box-shadow .18s;
+  }
+  .save-btn:active { transform: translateY(1px); }
+  .save-btn:not(:disabled):hover { filter: brightness(1.05); }
+  .save-btn:disabled { background: #e3dad3; color: #a89e97; box-shadow: none; cursor: default; }
+
+  .results { display: flex; flex-direction: column; gap: 14px; }
+  .res-card {
+    padding: 16px 20px; border-radius: 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    box-shadow: 0 6px 20px rgba(56,51,61,0.05);
+  }
+  .res-card .res-left { display: flex; align-items: center; gap: 12px; }
+  .swatch { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .res-meta { display: flex; flex-direction: column; gap: 3px; }
+  .res-card .rate-tag { font-size: 12.5px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.3px; }
+  .res-card .rate-big { font-size: 22px; font-weight: 900; line-height: 1; color: var(--ink); }
+  .res-card .twd { font-size: 30px; font-weight: 900; text-align: right; letter-spacing: 0.3px; color: var(--ink); }
+  .res-card .twd .unit { font-size: 13px; font-weight: 500; color: var(--ink-3); margin-right: 3px; }
+
+  .res-card.blue  { background: linear-gradient(180deg,#fff, var(--blue-bg)); border-color:#dbe7f0; }
+  .res-card.blue  .swatch { background: var(--blue); }
+  .res-card.rose  { background: linear-gradient(180deg,#fff, var(--rose-bg)); border-color:#f0dcda; }
+  .res-card.rose  .swatch { background: var(--rose); }
+  .res-card.gold  { background: linear-gradient(180deg,#fff, var(--gold-bg)); border-color:#efe0c6; }
+  .res-card.gold  .swatch { background: var(--gold); }
+
+  .custom-rate-input {
+    width: 104px;
+    background: #fffdf9;
+    border: 1.5px solid #e4d2ab;
+    border-radius: 11px;
+    color: var(--gold);
+    font-family: var(--sans);
+    font-size: 20px; font-weight: 700;
+    text-align: center; outline: none;
+    padding: 8px 4px;
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .custom-rate-input:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(169,121,45,0.14); }
+
+  /* 紀錄 */
+  .hist-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 34px 2px 14px;
+  }
+  .hist-title { font-family: var(--serif); font-size: 18px; font-weight: 600; letter-spacing: 1px; color: var(--ink); }
+  .hist-count { color: var(--ink-3); font-size: 13px; font-weight: 400; margin-left: 6px; }
+  .clear-btn {
+    background: var(--paper); border: 1px solid var(--line);
+    color: var(--ink-2); border-radius: 11px;
+    min-height: 40px; padding: 0 16px;
+    font-size: 13.5px; font-weight: 500; letter-spacing: 0.3px;
+    cursor: pointer; transition: background .15s;
+  }
+  .clear-btn:active { background: #efe8e2; }
+
+  .hist-list { display: flex; flex-direction: column; gap: 12px; max-height: 440px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .hist-empty {
+    text-align: center; color: var(--ink-3);
+    font-size: 14px; letter-spacing: 0.2px; line-height: 1.6;
+    padding: 30px 16px;
+    border: 1px dashed var(--hairline); border-radius: 16px;
+    background: rgba(255,255,255,0.6);
+  }
+  .hist-item {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 16px;
+    position: relative;
+    box-shadow: 0 5px 16px rgba(56,51,61,0.05);
+  }
+  .hist-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; padding-right: 40px; }
+  .hist-yen { font-size: 23px; font-weight: 900; color: var(--ink); }
+  .hist-yen .y { color: var(--ink-3); font-size: 15px; font-weight: 500; margin-right: 2px; }
+  .hist-time { font-size: 13px; font-weight: 500; color: var(--ink-3); }
+  .hist-rates { display: flex; flex-direction: column; gap: 7px; }
+  .hist-rate { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); }
+  .hist-rate .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .hist-rate .lbl { min-width: 42px; font-weight: 500; }
+  .hist-rate .val { font-weight: 700; color: var(--ink); }
+  .hist-rate.b .dot { background: var(--blue); }
+  .hist-rate.r .dot { background: var(--rose); }
+  .hist-rate.c .dot { background: var(--gold); }
+  .del {
+    position: absolute; top: 6px; right: 6px;
+    width: 44px; height: 44px;
+    border: none; background: transparent;
+    color: #b7aca5; font-size: 22px; line-height: 1;
+    cursor: pointer; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .del:active { background: #f3ece6; color: var(--rose); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 30px;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: #fff;
+    font-weight: 600; font-size: 14.5px; letter-spacing: 0.5px;
+    padding: 12px 22px; border-radius: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s; z-index: 50;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .footer-note {
+    margin-top: 28px;
+    font-size: 13px; color: var(--ink-3);
+    text-align: center; line-height: 1.9; letter-spacing: 0.2px;
+  }
+  .footer-note b { color: var(--rose); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>日圓換台幣計算機</h1>
+    <div class="rule"></div>
+    <div class="sub">打上日圓標價（含稅），三個匯率一次看</div>
+  </div>
+
+  <div class="card input-card">
+    <div class="label">日圓金額（含稅）</div>
+    <div class="yen-row">
+      <span class="yen-symbol">¥</span>
+      <input id="yen" type="text" inputmode="numeric" placeholder="0" autocomplete="off">
+    </div>
+    <button id="saveBtn" class="save-btn" disabled>記錄這筆</button>
+  </div>
+
+  <div class="results">
+    <div class="res-card blue">
+      <div class="res-left">
+        <span class="swatch"></span>
+        <div class="res-meta"><span class="rate-tag">匯率</span><span class="rate-big">0.21</span></div>
+      </div>
+      <div class="twd"><span class="unit">NT$</span><span id="r21">0</span></div>
+    </div>
+    <div class="res-card rose">
+      <div class="res-left">
+        <span class="swatch"></span>
+        <div class="res-meta"><span class="rate-tag">匯率</span><span class="rate-big">0.25</span></div>
+      </div>
+      <div class="twd"><span class="unit">NT$</span><span id="r25">0</span></div>
+    </div>
+    <div class="res-card gold">
+      <div class="res-left">
+        <span class="swatch"></span>
+        <div class="res-meta">
+          <span class="rate-tag">自由輸入匯率</span>
+          <input id="customRate" class="custom-rate-input" type="text" inputmode="decimal" value="0.21" autocomplete="off">
+        </div>
+      </div>
+      <div class="twd"><span class="unit">NT$</span><span id="rCustom">0</span></div>
+    </div>
+  </div>
+
+  <div class="hist-head">
+    <div><span class="hist-title">紀錄</span><span id="histCount" class="hist-count"></span></div>
+    <button id="clearBtn" class="clear-btn">清空</button>
+  </div>
+  <div id="histList" class="hist-list"></div>
+
+  <div class="footer-note">
+    台幣 = 日圓 &times; 匯率　·　保留最近 <b>100</b> 筆紀錄<br>
+    紀錄存在這台裝置的瀏覽器，換裝置或清除資料後會消失
+  </div>
+</div>
+
+<div id="toast" class="toast">已記錄 ✓</div>
+
+<script>
+  var MAX = 100;
+  var STORE_KEY = 'yen_twd_history_v1';
+  var RATE_KEY = 'yen_twd_customrate_v1';
+
+  var yenEl = document.getElementById('yen');
+  var customRateEl = document.getElementById('customRate');
+  var r21El = document.getElementById('r21');
+  var r25El = document.getElementById('r25');
+  var rCustomEl = document.getElementById('rCustom');
+  var saveBtn = document.getElementById('saveBtn');
+  var clearBtn = document.getElementById('clearBtn');
+  var histList = document.getElementById('histList');
+  var histCount = document.getElementById('histCount');
+  var toast = document.getElementById('toast');
+
+  function fmt(n) { return isFinite(n) ? Math.round(n).toLocaleString('en-US') : '0'; }
+  function parseNum(s) {
+    if (!s) return 0;
+    var v = parseFloat(String(s).replace(/,/g, '').replace(/[^0-9.]/g, ''));
+    return isNaN(v) ? 0 : v;
+  }
+
+  function loadHist() {
+    try { var raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : []; }
+    catch (e) { return []; }
+  }
+  function saveHist(arr) { try { localStorage.setItem(STORE_KEY, JSON.stringify(arr)); } catch (e) {} }
+  function loadRate() { try { var r = localStorage.getItem(RATE_KEY); if (r) customRateEl.value = r; } catch (e) {} }
+  function persistRate() { try { localStorage.setItem(RATE_KEY, customRateEl.value); } catch (e) {} }
+
+  var history = loadHist();
+
+  function calc() {
+    var yen = parseNum(yenEl.value);
+    var cr = parseNum(customRateEl.value);
+    r21El.textContent = fmt(yen * 0.21);
+    r25El.textContent = fmt(yen * 0.25);
+    rCustomEl.textContent = fmt(yen * cr);
+    saveBtn.disabled = yen <= 0;
+  }
+
+  function timeLabel(ts) {
+    var d = new Date(ts);
+    var mo = d.getMonth() + 1, day = d.getDate(), h = d.getHours(), m = d.getMinutes();
+    return mo + '/' + day + ' ' + h + ':' + (m < 10 ? '0' + m : m);
+  }
+
+  function renderHist() {
+    histCount.textContent = history.length ? '（' + history.length + ' 筆）' : '';
+    if (!history.length) {
+      histList.innerHTML = '<div class="hist-empty">還沒有紀錄，打完金額按「記錄這筆」就會出現在這裡</div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < history.length; i++) {
+      var it = history[i];
+      html += '<div class="hist-item">' +
+        '<button class="del" data-id="' + it.id + '" aria-label="刪除這筆">&times;</button>' +
+        '<div class="hist-top">' +
+          '<div class="hist-yen"><span class="y">¥</span>' + fmt(it.yen) + '</div>' +
+          '<div class="hist-time">' + timeLabel(it.ts) + '</div>' +
+        '</div>' +
+        '<div class="hist-rates">' +
+          '<div class="hist-rate b"><span class="dot"></span><span class="lbl">0.21</span><span class="val">NT$' + fmt(it.yen * 0.21) + '</span></div>' +
+          '<div class="hist-rate r"><span class="dot"></span><span class="lbl">0.25</span><span class="val">NT$' + fmt(it.yen * 0.25) + '</span></div>' +
+          '<div class="hist-rate c"><span class="dot"></span><span class="lbl">' + it.rate + '</span><span class="val">NT$' + fmt(it.yen * it.rate) + '</span></div>' +
+        '</div>' +
+      '</div>';
+    }
+    histList.innerHTML = html;
+  }
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function () { toast.classList.remove('show'); }, 1400);
+  }
+
+  yenEl.addEventListener('input', function () {
+    var raw = yenEl.value.replace(/[^0-9]/g, '');
+    yenEl.value = raw ? parseInt(raw, 10).toLocaleString('en-US') : '';
+    calc();
+  });
+  customRateEl.addEventListener('input', function () { calc(); persistRate(); });
+
+  saveBtn.addEventListener('click', function () {
+    var yen = parseNum(yenEl.value);
+    if (yen <= 0) return;
+    history.unshift({
+      id: Date.now() + '' + Math.floor(Math.random() * 1000),
+      yen: yen, rate: parseNum(customRateEl.value), ts: Date.now()
+    });
+    if (history.length > MAX) history = history.slice(0, MAX);
+    saveHist(history);
+    renderHist();
+    showToast('已記錄 ✓');
+    yenEl.value = '';
+    calc();
+    yenEl.focus();
+  });
+
+  histList.addEventListener('click', function (e) {
+    var btn = e.target.closest('.del');
+    if (!btn) return;
+    var id = btn.getAttribute('data-id');
+    history = history.filter(function (x) { return x.id !== id; });
+    saveHist(history);
+    renderHist();
+  });
+
+  clearBtn.addEventListener('click', function () {
+    if (!history.length) return;
+    if (confirm('確定要清空所有紀錄嗎？')) {
+      history = [];
+      saveHist(history);
+      renderHist();
+    }
+  });
+
+  loadRate();
+  renderHist();
+  calc();
+</script>
+</body>
+</html>
