@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>關西 6 日行程 11/25–11/30</title>
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#fff; --ink:#2b2b2b; --muted:#6b6b6b;
+    --line:#e5e0d6; --accent:#b4472e; --accent2:#2f6b57; --warn:#c6861b;
+    --chip:#efece4; --shadow:0 1px 3px rgba(0,0,0,.06),0 6px 18px rgba(0,0,0,.05);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Sans","Noto Sans TC","PingFang TC",system-ui,-apple-system,"Microsoft JhengHei",sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:860px;margin:0 auto;padding:0 16px 64px}
+  header{padding:30px 0 14px;text-align:center}
+  header .kicker{letter-spacing:.3em;font-size:12px;color:var(--accent);font-weight:700}
+  header h1{margin:6px 0 4px;font-size:27px;font-weight:800}
+  header .dates{color:var(--muted);font-size:14px}
+  header .route{margin-top:10px;font-size:13px;color:var(--muted)}
+
+  .notes{background:#fff8ef;border:1px solid #f0dcbd;border-radius:14px;padding:14px 16px;margin:18px 0;box-shadow:var(--shadow)}
+  .notes h3{margin:0 0 8px;font-size:14px;color:var(--warn);display:flex;align-items:center;gap:6px}
+  .notes ul{margin:0;padding-left:18px}
+  .notes li{font-size:13.5px;margin:5px 0}
+
+  .tabs{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0;
+    display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;border:1px solid var(--line);background:var(--card);border-radius:999px;
+    padding:8px 14px;font-size:13px;cursor:pointer;white-space:nowrap;transition:.15s;color:var(--ink)}
+  .tab .d{font-weight:800;margin-right:5px}
+  .tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tab.active .d{color:#fff}
+
+  .day{display:none;animation:fade .25s ease}
+  .day.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .dayhead{display:flex;align-items:baseline;gap:10px;margin:12px 2px 14px;flex-wrap:wrap}
+  .dayhead .num{font-size:30px;font-weight:800;color:var(--accent)}
+  .dayhead .wk{font-size:13px;color:var(--muted)}
+  .dayhead .title{font-size:17px;font-weight:700}
+  .daysummary{font-size:13.5px;color:var(--muted);margin:-6px 2px 16px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;margin:10px 0;box-shadow:var(--shadow)}
+  .slot{display:flex;gap:12px}
+  .time{flex:0 0 58px;font-weight:800;font-size:13px;color:var(--accent2);padding-top:1px}
+  .body h4{margin:0 0 4px;font-size:15.5px}
+  .body p{margin:4px 0;font-size:13.5px;color:#444}
+  .body .sub{color:var(--muted);font-size:12.5px}
+
+  .pill{display:inline-block;font-size:11.5px;background:var(--chip);color:#555;
+    border-radius:6px;padding:2px 8px;margin:3px 4px 0 0}
+  .pill.move{background:#eaf2ef;color:var(--accent2)}
+  .pill.warn{background:#fbeecd;color:#8a5a00}
+  .pill.money{background:#efe7f3;color:#6a4a85}
+
+  a.map{display:inline-block;font-size:12.5px;color:var(--accent);text-decoration:none;
+    border-bottom:1px dashed var(--accent);margin-top:6px}
+  a.map:hover{opacity:.7}
+  a.gmap{color:var(--accent);text-decoration:none;font-weight:700;white-space:nowrap}
+  a.gmap:hover{opacity:.7}
+
+  .move-row{background:#f3f7f5;border:1px dashed #cfe0d8;border-radius:10px;
+    padding:9px 12px;margin:10px 0;font-size:13px;color:#2f6b57;display:flex;gap:8px;align-items:flex-start}
+  .move-row b{color:#204a3c}
+
+  h2.sec{margin:34px 0 8px;font-size:18px;display:flex;align-items:center;gap:8px}
+  .table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;overflow:hidden;font-size:13px;box-shadow:var(--shadow)}
+  .table th,.table td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line)}
+  .table th{background:#f0ece3;font-weight:700}
+  .table tr:last-child td{border-bottom:none}
+  .muted{color:var(--muted)}
+  .right{text-align:right}
+
+  footer{margin-top:34px;font-size:11.5px;color:var(--muted);line-height:1.8}
+  footer h4{font-size:12.5px;color:#555;margin:0 0 4px}
+  footer a{color:var(--muted)}
+  .tag{display:inline-block;background:var(--chip);border-radius:6px;padding:1px 7px;font-size:11px;color:#777;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">KANSAI · AUTUMN</div>
+    <h1>關西 6 日自由行</h1>
+    <div class="dates">2026 / 11 / 25（二）– 11 / 30（日）· 京都 4 晚 + 大阪 1 晚</div>
+    <div class="route">關西機場 → 京都 → 天橋立·伊根 → 京都 → 大阪 → 關西機場</div>
+  </header>
+
+  <div style="background:#eef4ff;border:1px solid #cdddf5;border-radius:12px;padding:10px 14px;margin:14px 0;font-size:13px">
+    🧭 <b>查交通就用這個：Yahoo! 乗換案内</b>——輸入起訖站，給你電車班次、月台、轉乘與票價，日本最準。<a href="https://transit.yahoo.co.jp/" target="_blank" rel="noopener" style="color:var(--accent);font-weight:700;text-decoration:none">transit.yahoo.co.jp ↗</a>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-day="0"><span class="d">25</span>二</button>
+    <button class="tab" data-day="1"><span class="d">26</span>三</button>
+    <button class="tab" data-day="2"><span class="d">27</span>四</button>
+    <button class="tab" data-day="3"><span class="d">28</span>五</button>
+    <button class="tab" data-day="4"><span class="d">29</span>六</button>
+    <button class="tab" data-day="5"><span class="d">30</span>日</button>
+    <button class="tab" data-day="6">🚆 交通</button>
+    <button class="tab" data-day="7">💴 花費</button>
+    <button class="tab" data-day="momiji">🍁 賞楓加碼</button>
+    <button class="tab" data-day="shop">🛍️ 必買清單</button>
+    <button class="tab" data-day="pay">🚉 車站＋支付</button>
+  </nav>
+
+  <!-- DAY 25 -->
+  <section class="day active" data-day="0">
+    <div class="dayhead"><span class="num">11/25</span><span class="wk">週二</span><span class="title">抵達京都 · 鴨川 · 四條烏丸</span></div>
+    <div class="daysummary">重點：順利進城＋啟用 JR Pass＋輕鬆逛。長途飛行後第一天別排太滿。</div>
+
+    <div class="card"><div class="slot"><div class="time">11:00</div><div class="body">
+      <h4>關西機場 (KIX) 抵達</h4>
+      <p>入境＋提領行李抓 45–60 分。出關後先到 2 樓 JR 售票處<b>啟用「JR Kansai WIDE Area Pass」</b>（見交通頁，今天開卡剛好用滿 5 天到 11/29）。</p>
+      <span class="pill warn">建議先在台灣線上買好 Pass 兌換券</span>
+    </div></div></div>
+
+    <div class="move-row">🚆 <div><b>KIX → 京都站</b>　關空特急 HARUKA，約 75–100 分，直達 JR 京都站。持 WIDE Pass 免費（可劃指定席）。</div></div>
+
+    <div class="card"><div class="slot"><div class="time">13:30</div><div class="body">
+      <h4>京都站 → 飯店放行李（ホテル京阪 京都駅南）</h4>
+      <p>飯店就在 <b>JR 京都站八条西口徒步約 1 分</b>，新幹線月台旁、自由通道相連，下車幾乎不用拖行李走遠。先 check in／寄放行李再出門。</p>
+      <p class="sub">飯店早餐 7:00–10:00（有料），明早去天橋立可先吃再出發。</p>
+      <a class="map" href="https://maps.app.goo.gl/y32vnfZHcgE3LQyX8" target="_blank" rel="noopener">📍 你提供的京都飯店連結</a>
+    </div></div></div>
+
+    <div class="card"><div class="slot"><div class="time">15:00</div><div class="body">
+      <h4>四條烏丸 · 錦市場 · 河原町購物（含 Round1，一次逛完）</h4>
+      <p>錦市場吃吃逛逛（多數店家約 18:00 收），再往河原町、新京極・寺町商店街，動漫購物與 Round1 都在這一帶一次收，不用晚上再回頭。</p>
+      <p class="sub">🧭 順逛順序（由南到北，約 3–10 分腳程）：<b>駿河屋 京都寺町店（近四条・寺町，1F遊戲/2F公仔/3F模型，平日12:00–22:00）→ アニメイト京都（新京極・パッサージオ 2F）→ Round1 京都河原町（近三条・河原町通 4F，9:00–翌6:00）</b>。從四条河原町進、往三条走，Round1 壓軸（開到凌晨，想晚點玩也行）。</p>
+      <p class="sub">（animate／らしんばん另一組在京都站アバンティ 6F，已排在 11/25 抵達或 29。）</p>
+      <span class="pill">錦市場</span><span class="pill">駿河屋寺町</span><span class="pill">animate 新京極</span><span class="pill">Round1</span>
+      <a class="map" href="https://www.google.com/maps/search/錦市場" target="_blank" rel="noopener">📍 錦市場</a>
+      <a class="map" href="https://www.google.com/maps/search/駿河屋+京都寺町店" target="_blank" rel="noopener">📍 駿河屋 寺町店</a>
+      <a class="map" href="https://www.google.com/maps/search/アニメイト京都+新京極" target="_blank" rel="noopener">📍 animate 京都(新京極)</a>
+      <a class="map" href="https://www.google.com/maps/search/ラウンドワン京都河原町店" target="_blank" rel="noopener">📍 Round1 京都河原町</a>
+    </div></div></div>
+
+    <div class="card"><div class="slot"><div class="time">17:00</div><div class="body">
+      <h4>鴨川散步 · 先斗町晚餐</h4>
+      <p>沿鴨川（四條大橋一帶）散步，傍晚氣氛最好；旁邊先斗町小巷多居酒屋、京料理。</p>
+      <span class="pill">鴨川</span><span class="pill">先斗町</span>
+      <a class="map" href="https://www.google.com/maps/search/鴨川+四條大橋" target="_blank" rel="noopener">📍 鴨川（四條）</a>
+    </div></div></div>
+
+    <div class="card" style="border-color:#e7d3c0;background:#fcf7f2"><div class="slot"><div class="time">夜</div><div class="body">
+      <h4>🍁 順路夜楓（回京都站前，看體力）</h4>
+      <p>飯店在京都站旁，回程可順看一個點燈：<b>東寺</b> 夜間特別拜觀 2026/11/6–12/13（11/21 除外），五重塔配水面倒影很經典；或 <b>渉成園「秋灯り」</b> 11/15–30，離京都站步行可到、人較少。第一天累的話跳過沒關係。</p>
+      <span class="pill">離飯店近</span><span class="pill warn">看體力，可跳過</span>
+      <a class="map" href="https://www.google.com/maps/search/東寺" target="_blank" rel="noopener">📍 東寺</a>
+      <a class="map" href="https://www.google.com/maps/search/渉成園" target="_blank" rel="noopener">📍 渉成園</a>
+    </div></div></div>
+  </section>
+
+  <!-- DAY 26 -->
+  <section class="day" data-day="1">
+    <div class="dayhead"><span class="num">11/26</span><span class="wk">週三</span><span class="title">天橋立 · 伊根舟屋（京都當天來回）</span></div>
+    <div class="daysummary">重點：最硬的一天，來回車程約 4 小時。建議<b>先搭特急到天橋立 → 先去伊根 → 回頭玩天橋立</b>，較不會錯過末班巴士。務必搭最早的特急。</div>
+
+    <div class="card"><div class="slot"><div class="time">08:3x</div><div class="body">
+      <h4>京都站 → 天橋立（特急はしだて）</h4>
+      <p>搭當天最早一班特急「はしだて」，約 2 小時到天橋立。持 WIDE Pass 全程免費（含京都丹後鐵道段），建議劃指定席、靠窗。</p>
+      <span class="pill warn">實際班次請於 JR 官網／車站確認</span><span class="pill move">約 2 小時</span>
+      <a class="map" href="https://www.google.com/maps/search/天橋立駅" target="_blank" rel="noopener">📍 天橋立駅</a>
+    </div></div></div>
+
+    <div class="move-row">🚌 <div><b>天橋立 → 伊根</b>　天橋立站轉「丹後海陸交通」路線巴士，約 25–60 分到伊根。<b>此巴士 WIDE Pass 不涵蓋</b>，現場付或買「天橋立·伊根」地區票券。</div></div>
+
+    <div class="card"><div class="slot"><div class="time">11:30</div><div class="body">
+      <h4>伊根舟屋</h4>
+      <p>日本海邊的傳統舟屋聚落，一樓停船、二樓住人。可搭「伊根灣遊覽船」或沿岸散步，安靜又特別。先玩伊根是因為回程巴士班次少、怕錯過末班。</p>
+      <span class="pill">舟屋</span><span class="pill">伊根灣遊覽船</span>
+      <a class="map" href="https://www.google.com/maps/search/伊根舟屋" target="_blank" rel="noopener">📍 伊根舟屋</a>
+    </div></div></div>
+
+    <div class="card"><div class="slot"><div class="time">14:30</div><div class="body">
+      <h4>回天橋立 · 展望台看「飛龍／昇龍」</h4>
+      <p>回到天橋立後上展望台俯瞰沙洲：南側<b>天橋立 View Land</b>（飛龍觀，離車站近）或北側<b>傘松公園</b>（昇龍觀，要先過沙洲）。擇一即可，纜車／吊椅另購票約 ¥1,000 往返。</p>
+      <p class="sub">纜車營業時間（10/1–11/15 為 9:00–17:00，11/16–2/15 為 9:00–16:30），11 月下旬偏早收，記得抓時間。</p>
+      <span class="pill">View Land 飛龍觀</span><span class="pill">傘松公園</span>
+      <a class="map" href="https://www.google.com/maps/search/天橋立ビューランド" target="_blank" rel="noopener">📍 View Land</a>
+    </div></div></div>
+
+    <div class="move-row">🚆 <div><b>天橋立 → 京都站</b>　搭傍晚特急「はしだて」回京都（末班約 17–18 時，務必先查），約 2 小時。到京都約 19–20 時。</div></div>
+  </section>
+
+  <!-- DAY 27 -->
+  <section class="day" data-day="2">
+    <div class="dayhead"><span class="num">11/27</span><span class="wk">週四</span><span class="title">清水寺（早上）· 貴船神社・紅葉隧道（下午）</span></div>
+    <div class="daysummary">重點：早上只排清水寺（不穿和服），約 12:00 結束 → 下午搭京阪＋叡電「きらら」去貴船，回程經紅葉隧道點燈。交通看下面三張卡。</div>
+
+    <div class="card"><div class="slot"><div class="time">08:30</div><div class="body">
+      <h4>清水寺（早上 · 不穿和服）</h4>
+      <p>白天拜觀 6:00–18:00、拜觀費大人約 ¥500。沿茶碗坂上去，清水舞台＋三重塔＋音羽瀑布。早點到人少又好拍，約 12:00 收，接著往北去貴船。</p>
+      <p class="sub">🍁 下山走去車站時順路：<b>產寧坂→二年坂→八坂塔→八坂神社→祇園</b>一路賞楓好拍，旁邊 <b>高台寺</b>（紅葉名所，例年見頃 11 月中～下旬）可視時間順看，再到京阪「祇園四条」上車（見下路線）。</p>
+      <span class="pill">清水舞台</span><span class="pill">世界遺產</span><span class="pill">約 12:00 收</span>
+      <a class="map" href="https://www.google.com/maps/search/清水寺" target="_blank" rel="noopener">📍 清水寺</a>
+    </div></div></div>
+
+    <div class="card"><div class="body">
+      <h4>🚃 清水寺 → 貴船 詳細路線（約 1.5 小時）</h4>
+      <p class="sub" style="margin-top:2px">清水寺 12:00 結束出發，約 13:45–14:00 到貴船神社，午後光線足、時間剛好。</p>
+      <ol style="font-size:13.5px;padding-left:20px;margin:6px 0;line-height:1.9">
+        <li><b>清水寺 → 徒步到 京阪「清水五条」駅（約 20 分，全程下坡）</b><br><span class="muted">出清水寺沿清水坂／五条坂往下走到「五条坂」路口，再沿五条通直走到底即京阪「清水五条」駅（往 4 號出口方向進站）。一路伴手禮店、好走。<br>🌸 <b>想走美一點</b>：改經產寧坂→二年坂→八坂塔→八坂神社→祇園，走到京阪「祇園四条」駅上車（約 25–30 分），一樣往出町柳。</span></li>
+        <li><b>京阪本線・鴨東線（出町柳行）→「出町柳」約 10–12 分</b>（清水五条或祇園四条上車都行，約 ¥280）</li>
+        <li><b>叡山電鐵 鞍馬線（鞍馬／二軒茶屋行）→「貴船口」約 27 分</b>（約 ¥470）。搭展望列車 <b>「きらら」</b>最佳，會慢行經過市原～二ノ瀬的「紅葉隧道」；きらら有固定班表（見下連結），先佔靠窗位。</li>
+        <li><b>貴船口 → 京都巴士 33「貴船」約 5 分 → 徒步 5 分 → 貴船神社</b>（或從貴船口徒步約 30 分）</li>
+      </ol>
+      <p class="sub">💳 <b>支付：全程用 ICOCA 最方便</b>（京阪、叡電、京都巴士都能嗶；きらら免預約、一般車資即可）。這些<b>都不在 WIDE Pass 範圍</b>，ICOCA 自動扣款。<b>套票不划算</b>：叡電一日券「えぇきっぷ」¥1,200 只有多跑鞍馬／上下好幾趟才值得，貴船單純來回（約 ¥470×2）用 ICOCA 更省。</p>
+      <p class="sub">💡 回程：貴船下山巴士末班偏早（平日約 17:38）要抓時間；叡電貴船口→出町柳末班約 23:06。實際班次用最上面的 Yahoo 乗換案内＋きらら班表查，別憑印象。</p>
+      <a class="map" href="https://eizandensha.co.jp/guide/#kiraratimetable" target="_blank" rel="noopener">🔗 叡電 きらら 時刻表</a>
+      <a class="map" href="https://transit.yahoo.co.jp/" target="_blank" rel="noopener">🔗 Yahoo 乗換案内</a>
+      <a class="map" href="https://www.google.com/maps/search/京阪清水五条駅" target="_blank" rel="noopener">📍 清水五条駅</a>
+    </div></div>
+
+    <div class="card"><div class="body">
+      <h4>🚃 観光列車「きらら」時刻（紅葉季 2026/11/9–12/11・平日）＋叡電路線圖</h4>
+      <img src="eizan-map.png" alt="叡山電鐵 路線圖 出町柳〜鞍馬・貴船口" style="width:100%;border-radius:10px;border:1px solid var(--line);margin:6px 0;display:block">
+      <p class="sub">叡電有兩種観光列車：<b>展望列車「きらら」</b>走鞍馬線（出町柳⇔鞍馬，經「貴船口」與紅葉隧道，<b>你要搭這台</b>）；另一台「ひえい」走叡山本線往八瀬比叡山口（不經貴船）。きらら<b>一般車資即可搭、免預約（自由座）</b>，先佔靠窗位。</p>
+      <p style="font-size:13.5px;margin:8px 0 2px"><b>清水寺 12:00 結束 → 建議搭 出町柳發 12:45 或 13:15 的きらら</b>（約 12:40–12:50 到出町柳）。</p>
+      <table class="table">
+        <tr><th>往鞍馬（下り）出町柳 發</th><th>過「貴船口」</th></tr>
+        <tr><td><b>12:45</b></td><td><b>13:14</b></td></tr>
+        <tr><td><b>13:15</b></td><td><b>13:44</b></td></tr>
+        <tr><td>14:00</td><td>14:29</td></tr>
+        <tr><td>14:30</td><td>14:59</td></tr>
+        <tr><td>15:15</td><td>15:44</td></tr>
+        <tr><td>15:45</td><td>16:14</td></tr>
+      </table>
+      <table class="table">
+        <tr><th>回出町柳（上り）「貴船口」發</th></tr>
+        <tr><td>15:52 ／ 16:22 ／ 17:07 ／ 17:47 ／ 18:34 ／ 20:23 …</td></tr>
+      </table>
+      <p class="sub">紅葉隧道（市原～二ノ瀬）去程、回程都會經過，きらら會減速、夜間關燈慢行。班次可能因車輛檢修臨時變動，出發前再對一次官方 PDF。</p>
+      <a class="map" href="https://eizandensha.co.jp/uploads/505_file_path1.pdf" target="_blank" rel="noopener">🔗 きらら 紅葉季時刻表 PDF</a>
+      <a class="map" href="https://eizandensha.co.jp/guide/" target="_blank" rel="noopener">🔗 叡電 時刻表總覽</a>
+    </div></div>
+
+    <div class="card"><div class="body">
+      <h4>🗺️ 京都巴士 運行系統圖（含貴船・鞍馬・大原方向）</h4>
+      <img src="busmap-kyotobus.png" alt="京都巴士運行系統圖" style="width:100%;border-radius:10px;border:1px solid var(--line);margin:6px 0;display:block">
+      <p class="sub">貴船口→貴船是京都巴士（33／52／特52 等）；這張是京都巴士全系統圖，貴船・鞍馬・大原方向都在右上角。點圖可放大看站名。</p>
+    </div></div>
+
+    <div class="card"><div class="slot"><div class="time">14:00</div><div class="body">
+      <h4>🍁 貴船神社</h4>
+      <p>本宮表參道的朱紅春日燈籠石階是經典畫面。可走本宮→結社→奧宮「三社詣」，在本宮抽「水占卜」籤（浮在御神水上顯字），再沿貴船川散步，山區空氣清冷有味道。</p>
+      <p class="sub">貴船神社自己的點燈到 11/24（你 27 到時沒有），但這天的主秀是<b>叡電「紅葉隧道」徐行點燈——到 12/6 一定看得到</b>；貴船神社本身參拜一樣耐看，不受影響。</p>
+      <span class="pill">本宮三社詣</span><span class="pill">水占卜</span><span class="pill">主秀：紅葉隧道</span>
+      <a class="map" href="https://www.google.com/maps/search/貴船神社" target="_blank" rel="noopener">📍 貴船神社</a>
+      <a class="map" href="https://kifunejinja.jp/info/#anchor-2" target="_blank" rel="noopener">🔗 貴船神社官方</a>
+    </div></div></div>
+
+    <div class="card"><div class="slot"><div class="time">傍晚</div><div class="body">
+      <h4>回程：きらら 經紅葉隧道（點燈）→ 出町柳 → 晚餐</h4>
+      <p>回程一樣搭「きらら」，<b>日落後（約 16:50～）經市原～二ノ瀬「紅葉隧道」會關燈、徐行點燈</b>，比白天更夢幻。貴船口上り：15:52／16:22／17:07／17:47／18:34…</p>
+      <p class="sub">⚠️ 貴船→貴船口的<b>京都巴士 33 末班偏早（平日約 17:38）</b>；想待晚一點就改徒步下山（約 30 分）到貴船口站。回到出町柳約 18:00–18:30，可在出町柳一帶或回京都站吃晚餐。</p>
+      <span class="pill">紅葉隧道點燈</span><span class="pill warn">巴士末班 17:38</span>
+    </div></div></div>
+  </section>
+
+  <!-- DAY 28 -->
+  <section class="day" data-day="3">
+    <div class="dayhead"><span class="num">11/28</span><span class="wk">週五</span><span class="title">伏見稻荷（早上）· 嵐山賞楓（下午）</span></div>
+    <div class="daysummary">重點：早上伏見稻荷（＋東福寺）→ 下午搭 JR 直奔嵐山賞楓。稻荷照舊是早上、不受影響；想趕得上嵐山，稻荷走到四ツ辻即可、別硬攻山頂。</div>
+
+    <div class="move-row">🚆 <div><b>京都站 → 稲荷駅</b>　JR 奈良線約 5 分（持 WIDE Pass 免費）。愈早到人愈少。</div></div>
+
+    <div class="card"><div class="slot"><div class="time">08:00</div><div class="body">
+      <h4>伏見稻荷大社（早上·照舊）</h4>
+      <p>24 小時開放、<b>免費</b>。千本鳥居一路上稻荷山。<b>因為下午要去嵐山，建議走到「四ツ辻」(約 1–1.5h) 俯瞰市區就折返</b>，不用硬攻山頂（全程 2–3h）。清早光線與人潮最舒服。</p>
+      <span class="pill">千本鳥居</span><span class="pill">免費</span><span class="pill warn">走到四ツ辻折返</span>
+      <a class="map" href="https://www.google.com/maps/search/伏見稲荷大社" target="_blank" rel="noopener">📍 伏見稻荷大社</a>
+    </div></div></div>
+
+    <div class="card"><div class="slot"><div class="time">10:30</div><div class="body">
+      <h4>（可選·快速）東福寺通天橋</h4>
+      <p>離稻荷只一站（JR 東福寺駅）。通天橋是京都代表級的紅葉名所（見頃 11 月中～下旬，28 號正值見頃、一定有紅葉），但<b>人潮非常多</b>、需購票可能排隊。<b>想保留嵐山時間，這站可快速看或直接略過</b>。</p>
+      <span class="pill warn">旺季超擠·可略過</span><span class="pill">通天橋</span>
+      <a class="map" href="https://www.google.com/maps/search/東福寺" target="_blank" rel="noopener">📍 東福寺</a>
+    </div></div></div>
+
+    <div class="move-row">🚆 <div><b>稲荷 → 京都站 → 嵯峨嵐山（全程 JR，持 WIDE Pass 免費）</b><br>① JR 奈良線「稲荷」→「京都」約 5 分。② 京都站轉 <b>JR 嵯峨野線（山陰線・往園部／亀岡方向）</b>→「嵯峨嵐山」約 15–17 分。含轉乘約 30–40 分，中午出發剛好下午玩嵐山。<br>🚶 <b>嵐山內移動幾乎全靠走</b>：渡月橋、竹林小徑、天龍寺、野宮神社都在嵯峨嵐山駅徒步 5–10 分內，不用再搭車；想再往常寂光寺／祇王寺就多走一段。回程原路 JR 嵯峨嵐山→京都站。<br>（嵐山也有嵐電「嵐山」與阪急「嵐山」站，但你有 WIDE Pass，走 JR 嵯峨嵐山最省。）</div></div>
+
+    <div class="card"><div class="slot"><div class="time">13:00</div><div class="body">
+      <h4>🍁 下午→傍晚：嵐山（你指定排這天）</h4>
+      <p>渡月橋、竹林小徑、天龍寺（世界遺產庭園）、常寂光寺。嵐山這幾天正值見頃，是全程時機最好的賞楓點。</p>
+      <p class="sub">傍晚可接 <b>寶嚴院 秋季夜間特別拜觀 2026/11/13–12/6</b>（嵐山借景庭園點燈），或 <b>嵯峨野小火車「光之幻想列車」紅葉點燈</b>（需另購票、建議先線上預約）。晚上搭 JR 嵯峨嵐山回京都站（持 Pass 免費）。</p>
+      <span class="pill">渡月橋·竹林</span><span class="pill">天龍寺</span><span class="pill">寶嚴院夜楓</span>
+      <a class="map" href="https://www.google.com/maps/search/嵐山+渡月橋" target="_blank" rel="noopener">📍 渡月橋</a>
+      <a class="map" href="https://www.google.com/maps/search/竹林の小径" target="_blank" rel="noopener">📍 竹林小徑</a>
+      <a class="map" href="https://www.google.com/maps/search/天龍寺" target="_blank" rel="noopener">📍 天龍寺</a>
+    </div></div></div>
+
+    <div class="card" style="border-color:#cdddf5;background:#f3f7fb"><div class="body">
+      <h4>🚆 回程末班：嵯峨嵐山 → 京都（沒有早走壓力）</h4>
+      <p><b>結論：不用趕。</b>傍晚到晚上班次很密（約每 12–18 分一班，車程 15–19 分），<b>末班約 23:25 左右</b>。就算看完寶嚴院夜間（約到 20:30）再吃晚餐，之後還有很多班，完全來得及。實質「最晚離開」＝末班 ~23:25，但你大概 20:30–21:30 就會走。</p>
+      <p class="sub">傍晚班次抓節奏（分鐘可能微調，<b>當日請用最上方 Yahoo 乗換案内核對</b>，尤其末班）：17:13／17:28／17:46／17:58／18:13／18:28／18:48／18:59／19:13／19:28／19:43／19:58／20:14／20:29／20:49／21:09／21:27／21:46／22:10／…～末班約 23:25。快速班（約 17:40、18:26、19:26）更快到京都。</p>
+      <p class="sub">⚠️ 我查到的 JR 官方每分鐘表改版日較舊（末班時間已不同），所以上面末班以現行版為準、仍請當日再核對一次。</p>
+      <a class="map" href="https://transit.yahoo.co.jp/timetable/" target="_blank" rel="noopener">🔗 Yahoo 乗換案内（查當日實際班次）</a>
+    </div></div>
+  </section>
+
+  <!-- DAY 29 -->
+  <section class="day" data-day="4">
+    <div class="dayhead"><span class="num">11/29</span><span class="wk">週六</span><span class="title">移動大阪 · 心齋橋 · 道頓堀</span></div>
+    <div class="daysummary">重點：上午退房移動，下午逛大阪。這天是 WIDE Pass 第 5 天（最後一天），京都→大阪剛好用到。</div>
+
+    <div class="card" style="border-color:#e0cdd9;background:#fbf7fa"><div class="slot"><div class="time">10:00</div><div class="body">
+      <h4>🛍️ 必買：京都アバンティ（飯店隔壁，6F 是動漫樓）</h4>
+      <p>退房後直接逛隔壁的京都アバンティ（八条口正面、購物街 10:00 開）。<b>6 樓一次收：アニメイトアバンティ京都＋らしんばん（指南針，二手周邊）＋カードラボ（卡店）</b>，再加館內的 <b>プリサロン（大頭貼）</b>。プリサロン確切樓層到館內導覽／官網確認。逛完回京都站搭車去大阪。</p>
+      <p class="sub">★ 這一棟就在飯店旁，<b>25 抵達當天或 29 出發前</b>哪天順手都行。animate 另一家在河原町新京極（下面 25／27 有排）。</p>
+      <span class="pill">飯店隔壁</span><span class="pill">6F：animate＋らしんばん＋卡店</span><span class="pill">プリサロン</span>
+      <a class="map" href="https://www.google.com/maps/search/京都アバンティ" target="_blank" rel="noopener">📍 京都アバンティ</a>
+    </div></div></div>
+
+    <div class="move-row">🚆 <div><b>京都站 → 大阪 → 心齋橋</b>　飯店就在京都站，直接搭 JR 新快速 京都→大阪約 29 分（持 WIDE Pass 免費，今天是 Pass 第 5 天）；大阪站（梅田）轉地下鐵御堂筋線到心齋橋約 9 分（地鐵段另付約 ¥240）。</div></div>
+
+    <div class="card"><div class="slot"><div class="time">13:00</div><div class="body">
+      <h4>心齋橋飯店 Check in（HOTEL MYSTAYS 心斎橋）</h4>
+      <p>飯店在<b>御堂筋線「心齋橋站」7 號出口徒步 2 分</b>（四ツ橋站 5 號出口徒步 4 分），check in 15:00、checkout 11:00。放行李後開逛。</p>
+      <a class="map" href="https://maps.app.goo.gl/8GQvSteA1NhsweC7A" target="_blank" rel="noopener">📍 你提供的大阪飯店連結</a>
+    </div></div></div>
+
+    <div class="card"><div class="slot"><div class="time">14:00</div><div class="body">
+      <h4>心齋橋 · 道頓堀 · 難波</h4>
+      <p>心齋橋筋商店街購物、道頓堀固力果＋拍照、難波美食。晚上可往通天閣／新世界或法善寺橫丁。</p>
+      <span class="pill">心齋橋筋</span><span class="pill">道頓堀</span><span class="pill">難波</span>
+      <a class="map" href="https://www.google.com/maps/search/道頓堀" target="_blank" rel="noopener">📍 道頓堀</a>
+    </div></div></div>
+
+    <div class="card" style="border-color:#e0cdd9;background:#fbf7fa"><div class="slot"><div class="time">傍晚</div><div class="body">
+      <h4>🛍️ 必買：日本橋オタロード（でんでんタウン）</h4>
+      <p>大阪的動漫聖地，就在難波南邊、<b>從南海難波駅徒步約 5–6 分</b>，逛完道頓堀／難波順著走下去即可。一帶聚集：</p>
+      <p class="sub">・<b>アニメイト大阪日本橋</b>（日本橋西 1-1-3 アニメイトビル 1・2F，10:00–21:00）<br>・<b>らしんばん（指南針）</b>就在 animate 附近同一帶<br>・<b>駿河屋 日本橋でんでんタウン店</b>（日本橋 4-10-1，12:00–21:00）＋駿河屋大阪日本橋本店，可一路 hashigo</p>
+      <span class="pill">難波徒步6分</span><span class="pill">animate＋らしんばん＋駿河屋</span>
+      <a class="map" href="https://www.google.com/maps/search/日本橋オタロード" target="_blank" rel="noopener">📍 オタロード</a>
+      <a class="map" href="https://www.google.com/maps/search/アニメイト大阪日本橋" target="_blank" rel="noopener">📍 animate 日本橋</a>
+      <a class="map" href="https://www.google.com/maps/search/駿河屋+日本橋でんでんタウン店" target="_blank" rel="noopener">📍 駿河屋 日本橋</a>
+    </div></div></div>
+  </section>
+
+  <!-- DAY 30 -->
+  <section class="day" data-day="5">
+    <div class="dayhead"><span class="num">11/30</span><span class="wk">週日</span><span class="title">心齋橋 → 關西機場 → 桃園</span></div>
+    <div class="daysummary">重點：時間緊！11:00 的飛機，9:00 前要到機場。前一晚先把行李整理好。</div>
+
+    <div class="card"><div class="slot"><div class="time">07:1x</div><div class="body">
+      <h4>早餐（早一點／外帶）· checkout</h4>
+      <p>11:00 國際線建議 9:00 到。心齋橋→機場約 50 分，<b>最晚 7:30 出發</b>。飯店 checkout 11:00 不影響早出；建議前一晚買好便利商店早餐在路上吃。</p>
+      <span class="pill warn">時間很緊</span>
+    </div></div></div>
+
+    <div class="move-row">🚶 <div><b>① MyStays 心齋橋 → 南海難波站</b>　兩種走法：<b>(A)</b> 御堂筋線「心齋橋」→「難波(なんば)」1 站約 2 分，出站沿指標往「南海電車」；<b>(B)</b> 直接步行約 12–15 分往南到南海難波站。帶行李建議 (A)。</div></div>
+
+    <div class="move-row">🚆 <div><b>② 南海難波站 → 關西機場</b>　搭<b>南海電鐵</b>。<b>WIDE Pass 不涵蓋南海，需另購票。</b></div></div>
+
+    <div class="card"><div class="slot"><div class="time">08:00</div><div class="body">
+      <h4>南海電鐵 往關西機場（你指定路線）</h4>
+      <p>在南海難波站上車。行李多＋趕時間，建議<b>特急 Rapi:t</b>（全車指定席，約 34–40 分，¥1,490，可先在南海售票機／線上劃位）；想省錢可搭<b>空港急行</b>（約 45 分，¥970，無劃位、旺季可能要站）。約 8:40–8:50 到機場，留 2 小時餘裕。</p>
+      <p class="sub">注意：南海到站為第 1 航廈；若你的班機在第 2 航廈（多為 LCC），下車後要再轉免費接駁巴士約 10 分，請預留時間。</p>
+      <span class="pill money">Rapi:t ¥1,490 · 約 34–40 分</span><span class="pill money">空港急行 ¥970 · 約 45 分</span>
+      <a class="map" href="https://www.google.com/maps/search/南海難波駅" target="_blank" rel="noopener">📍 南海難波駅</a>
+    </div></div></div>
+
+    <div class="card"><div class="slot"><div class="time">11:00</div><div class="body">
+      <h4>關西機場起飛 → 桃園</h4>
+      <p>關西機場國際線第 1 航廈（部分 LCC 在第 2 航廈，需提早搭接駁）。確認你的航班航廈。</p>
+    </div></div></div>
+  </section>
+
+  <!-- TRANSPORT -->
+  <section class="day" data-day="6">
+    <div class="dayhead"><span class="title">🚆 交通：最省／最順建議</span></div>
+    <div class="daysummary">核心結論：買一張 <b>JR Kansai WIDE Area Pass（¥12,000／連續 5 天）</b>當主幹，11/25 開卡用到 11/29。光天橋立來回就幾乎回本。</div>
+
+    <div class="card"><div class="body">
+      <h4>🗺️ 京都 觀光地 巴士・地下鐵路線圖 2026</h4>
+      <img src="busmap-subway.png" alt="京都觀光地 巴士・地下鐵路線圖 2026" style="width:100%;border-radius:10px;border:1px solid var(--line);margin:6px 0;display:block">
+      <p class="sub">全市景點＋市巴士／京都巴士／地下鐵的對照大地圖，找景點到哪一站、哪號巴士很好用。點圖可放大。</p>
+    </div></div>
+
+    <h2 class="sec">為什麼推薦 WIDE Area Pass</h2>
+    <table class="table">
+      <tr><th>用到的區段</th><th>單買約略</th><th>Pass 是否涵蓋</th></tr>
+      <tr><td>11/25 HARUKA KIX→京都（外國旅客優惠單程）</td><td class="right">¥2,700</td><td>✅ 免費</td></tr>
+      <tr><td>11/26 京都⇆天橋立 特急はしだて（含丹後鐵道）來回</td><td class="right">約 ¥8,000</td><td>✅ 免費</td></tr>
+      <tr><td>11/28 京都⇆稲荷 JR 奈良線</td><td class="right">約 ¥300</td><td>✅ 免費</td></tr>
+      <tr><td>11/29 京都→大阪 JR 新快速</td><td class="right">約 ¥580</td><td>✅ 免費</td></tr>
+      <tr><td><b>合計（單買）</b></td><td class="right"><b>約 ¥11,580</b></td><td><b>Pass ¥12,000</b></td></tr>
+    </table>
+    <p class="muted" style="font-size:12.5px">→ 幾乎打平，但 Pass 可無限次搭、彈性高（還能免費加跑宇治、嵐山方向的 JR）。<b>光天橋立那段就值回票價</b>，所以推薦。</p>
+
+    <h2 class="sec">Pass 沒涵蓋、要另付的</h2>
+    <table class="table">
+      <tr><th>項目</th><th>方式／費用</th></tr>
+      <tr><td>天橋立 ⇆ 伊根</td><td>丹後海陸交通巴士（現場付，或買「天橋立·伊根」地區券）</td></tr>
+      <tr><td>天橋立展望台纜車</td><td>約 ¥1,000 往返</td></tr>
+      <tr><td>京都市區巴士／地下鐵（25、27、28 日）</td><td>ICOCA 感應，或視需要買地鐵·巴士一日券</td></tr>
+      <tr><td>大阪地下鐵（御堂筋線等）</td><td>ICOCA，每趟約 ¥240</td></tr>
+      <tr><td>11/30 心齋橋→難波→關西機場（南海電鐵）</td><td>御堂筋線 ¥240＋南海 Rapi:t ¥1,490／空港急行 ¥970</td></tr>
+    </table>
+
+    <h2 class="sec">替代方案</h2>
+    <p style="font-size:13.5px">若不想綁 5 天連續票，也可<b>單買</b>：HARUKA 外國旅客優惠單程 ¥2,700＋天橋立來回特急票＋其餘單程。總額和 Pass 差不多，但較沒彈性。人多／帶長輩，KIX↔市區也可考慮機場接送包車。</p>
+  </section>
+
+  <!-- COST -->
+  <section class="day" data-day="7">
+    <div class="dayhead"><span class="title">💴 粗估花費（每人 · 交通＋體驗）</span></div>
+    <div class="daysummary">只含交通與主要體驗，<b>不含</b>住宿、餐飲、購物、門票細項。幣別日圓，約略值。</div>
+    <table class="table">
+      <tr><th>項目</th><th class="right">約略</th></tr>
+      <tr><td>JR Kansai WIDE Area Pass（5 天）</td><td class="right">¥12,000</td></tr>
+      <tr><td>天橋立 伊根巴士＋展望台纜車＋遊覽船</td><td class="right">約 ¥3,000</td></tr>
+      <tr><td>京都市區交通（25／28／29，ICOCA）</td><td class="right">約 ¥1,500</td></tr>
+      <tr><td>11/27 貴船（京阪＋叡電きらら＋巴士，ICOCA）</td><td class="right">約 ¥1,500</td></tr>
+      <tr><td>大阪地下鐵（29 日）</td><td class="right">約 ¥500</td></tr>
+      <tr><td>11/30 難波→KIX（Rapi:t）</td><td class="right">¥1,490</td></tr>
+      <tr><td>清水寺拜觀</td><td class="right">¥500</td></tr>
+      <tr><td>東福寺門票（可選）</td><td class="right">約 ¥1,000</td></tr>
+      <tr><td><b>合計（每人）</b></td><td class="right"><b>約 ¥20,500–21,500</b></td></tr>
+    </table>
+    <p class="muted" style="font-size:12.5px">票價與日期為查詢時資訊，可能變動；出發前請以官方網站為準。</p>
+  </section>
+
+  <!-- 賞楓加碼 -->
+  <section class="day" data-day="momiji">
+    <div class="dayhead"><span class="title">🍁 賞楓加碼（不動表定，順路加）</span></div>
+    <div class="daysummary">這頁只列「<b>一定看得到</b>」的：夜楓點燈都是固定日期的活動（不管見頃早晚都會點），嵐山見頃又剛好命中你這幾天。照這些排就穩。</div>
+
+    <div class="card" style="background:#fbf7f3">
+      <h4>已排進行程、一定看得到的紅葉</h4>
+      <p>🍁 <b>11/26 天橋立・伊根</b>丹後紅葉／<b>11/27 叡電「紅葉隧道」徐行點燈</b>（11/7–12/6）＋貴船神社／<b>11/28 東福寺通天橋＋嵐山</b>（見頃命中）。下面是想多看夜楓時的「加碼」名所，全是固定日期點燈、不靠運氣。</p>
+    </div>
+
+    <h2 class="sec">加碼①：東山夜楓（清水寺旁，27 早上順路可先看白天）</h2>
+    <div class="card"><div class="body">
+      <p>27 早上在清水寺，下山走去車站時這幾個就在旁邊；但 27 下午你去貴船，<b>要看「夜間」點燈得取捨</b>（留東山就不去貴船）。日期都是確定的：</p>
+      <div class="line"><div class="dot" style="background:#b4472e"></div><div class="txt"><b>清水寺 夜間特別拜觀</b>　2026/11/21–30・17:30–21:30・¥500。</div></div>
+      <div class="line"><div class="dot" style="background:#b4472e"></div><div class="txt"><b>高台寺</b>　2026/10/23–12/13 點燈・17:00～，二年坂旁，有庭園倒影與投影。</div></div>
+      <div class="line"><div class="dot" style="background:#b4472e"></div><div class="txt"><b>青蓮院</b>　約 10/24–12/14・17:00–21:30（以官網為準），人較少。</div></div>
+      <a class="map" href="https://www.google.com/maps/search/高台寺" target="_blank" rel="noopener">📍 高台寺</a>
+    </div></div>
+
+    <h2 class="sec">加碼②：南禪寺・永觀堂夜楓（目前未排進任何一天）</h2>
+    <div class="card"><div class="body">
+      <p>原本排 28，後來 28 改成嵐山，所以<b>永觀堂現在沒排進表定</b>。想看的話需自己挪半天（例如 28 嵐山改早上、下午回東山；或割捨某個點）。日期確定：</p>
+      <div class="line"><div class="dot" style="background:#2f6b57"></div><div class="txt"><b>永觀堂 夜間點燈</b>　2026/11/20–12/6・17:30–20:30（21:00 閉門）・¥1,000。「もみじの永觀堂」池景倒影極美。地下鐵東西線「蹴上」徒步。</div></div>
+      <div class="line"><div class="dot" style="background:#2f6b57"></div><div class="txt"><b>南禪寺</b>　水路閣紅磚拱橋配紅葉，白天免費區即可拍，就在永觀堂旁。</div></div>
+      <a class="map" href="https://www.google.com/maps/search/永観堂" target="_blank" rel="noopener">📍 永觀堂</a>
+      <a class="map" href="https://www.google.com/maps/search/南禅寺+水路閣" target="_blank" rel="noopener">📍 南禪寺</a>
+    </div></div>
+
+    <h2 class="sec">加碼③：京都站旁夜楓（任一晚回飯店順便）</h2>
+    <div class="card"><div class="body">
+      <div class="line"><div class="dot" style="background:#c6861b"></div><div class="txt"><b>東寺</b>　夜間特別拜觀 2026/11/6–12/13（11/21 除外）。五重塔配水面倒影超經典，<b>離京都站近</b>，飯店在京都站旁、回程超順。</div></div>
+      <div class="line"><div class="dot" style="background:#c6861b"></div><div class="txt"><b>渉成園「秋灯り」</b>　11/15–30，離京都站步行可到，人潮較少。</div></div>
+      <a class="map" href="https://www.google.com/maps/search/東寺" target="_blank" rel="noopener">📍 東寺</a>
+    </div></div>
+
+    <p class="muted" style="font-size:12.5px">所有點燈日期與料金為查詢時（2026-11-19）資訊，各寺社可能微調，出發前請以官方網站為準；旺季夜楓排隊時間長、部分需事先線上預約。</p>
+  </section>
+
+  <!-- 必買清單 -->
+  <section class="day" data-day="shop">
+    <div class="dayhead"><span class="title">🛍️ 必買清單（店名 · 位置 · 最近站 · 時間 · 地圖）</span></div>
+    <div class="daysummary">三個落點：京都站アバンティ（飯店旁）、京都河原町（新京極・寺町）、大阪日本橋オタロード。對照這張當天照著跑。</div>
+
+    <h2 class="sec">📍 京都站・アバンティ 6F（飯店隔壁 · 11/25 抵達或 11/29 出發前）</h2>
+    <table class="table">
+      <tr><th>店</th><th>位置</th><th>最近站</th><th>時間</th><th>地圖</th></tr>
+      <tr><td>アニメイトアバンティ京都</td><td>アバンティ 6F</td><td>JR京都站八条口 1–2 分</td><td>10:00–21:00</td><td><a class="gmap" href="https://www.google.com/maps/search/アニメイトアバンティ京都" target="_blank" rel="noopener">📍</a></td></tr>
+      <tr><td>らしんばん（指南針）</td><td>アバンティ 6F</td><td>八条東口 2 分</td><td>10:00–21:00</td><td><a class="gmap" href="https://www.google.com/maps/search/らしんばん+アバンティ京都店" target="_blank" rel="noopener">📍</a></td></tr>
+      <tr><td>カードラボ（卡牌）</td><td>アバンティ 6F</td><td>八条口 1–2 分</td><td>依館內</td><td><a class="gmap" href="https://www.google.com/maps/search/カードラボ+アバンティ京都店" target="_blank" rel="noopener">📍</a></td></tr>
+      <tr><td>プリサロン（大頭貼）</td><td>アバンティ 館內<span class="muted">（樓層未確認，現場看導覽）</span></td><td>八条口 1–2 分</td><td>依館內</td><td><a class="gmap" href="https://www.google.com/maps/search/京都アバンティ" target="_blank" rel="noopener">📍</a></td></tr>
+    </table>
+
+    <h2 class="sec">📍 京都・河原町（新京極・寺町 · 11/25 或 11/27 傍晚）</h2>
+    <table class="table">
+      <tr><th>店</th><th>位置</th><th>最近站</th><th>時間</th><th>地圖</th></tr>
+      <tr><td>アニメイト京都</td><td>新京極・パッサージオ 2F</td><td>阪急京都河原町駅</td><td>依店舖</td><td><a class="gmap" href="https://www.google.com/maps/search/アニメイト京都+新京極" target="_blank" rel="noopener">📍</a></td></tr>
+      <tr><td>駿河屋 京都寺町店</td><td>寺町（1F遊戲/2F公仔/3F模型）</td><td>阪急河原町駅 3 分</td><td>平日 12:00–22:00／假日 10:00–22:00</td><td><a class="gmap" href="https://www.google.com/maps/search/駿河屋+京都寺町店" target="_blank" rel="noopener">📍</a></td></tr>
+      <tr><td>Round1 京都河原町店</td><td>4F</td><td>阪急京都河原町駅旁</td><td>9:00–翌 6:00</td><td><a class="gmap" href="https://www.google.com/maps/search/ラウンドワン京都河原町店" target="_blank" rel="noopener">📍</a></td></tr>
+    </table>
+
+    <h2 class="sec">📍 大阪・日本橋オタロード（11/29，難波徒步 5–6 分）</h2>
+    <table class="table">
+      <tr><th>店</th><th>位置</th><th>最近站</th><th>時間</th><th>地圖</th></tr>
+      <tr><td>アニメイト大阪日本橋</td><td>日本橋西 1-1-3 アニメイトビル 1・2F</td><td>難波 5–6 分</td><td>10:00–21:00 無休</td><td><a class="gmap" href="https://www.google.com/maps/search/アニメイト大阪日本橋" target="_blank" rel="noopener">📍</a></td></tr>
+      <tr><td>らしんばん（指南針）</td><td>オタロード・animate 附近</td><td>難波 5–6 分</td><td>依店舖</td><td><a class="gmap" href="https://www.google.com/maps/search/らしんばん+大阪日本橋" target="_blank" rel="noopener">📍</a></td></tr>
+      <tr><td>駿河屋 日本橋でんでんタウン店</td><td>日本橋 4-10-1（1–3F）</td><td>南海難波 6 分／地下鐵日本橋 8 分</td><td>12:00–21:00</td><td><a class="gmap" href="https://www.google.com/maps/search/駿河屋+日本橋でんでんタウン店" target="_blank" rel="noopener">📍</a></td></tr>
+      <tr><td>駿河屋 大阪日本橋本店</td><td>オタロード一帶</td><td>難波 5–6 分</td><td>依店舖</td><td><a class="gmap" href="https://www.google.com/maps/search/駿河屋+大阪日本橋本店" target="_blank" rel="noopener">📍</a></td></tr>
+    </table>
+
+    <div class="card" style="background:#fff8ef;border-color:#f0dcbd"><div class="body">
+      <p style="font-size:13px;margin:0">💡 <b>開門時間差：</b>駿河屋多為 <b>12:00</b> 才開、animate 多為 10:00；想一次逛齊建議<b>下午～傍晚</b>去（多數開到 21:00，Round1 到凌晨）。兩家 animate 商品線接近，通常收一家即可，特定限定品再跑第二家。</p>
+    </div></div>
+
+    <p class="muted" style="font-size:12.5px">樓層／營業時間為查詢時（2026-11-19）資訊，可能變動；標「依店舖」者請到場或官網確認。プリサロン 樓層未查到，未臆測。</p>
+  </section>
+
+  <!-- 車站＋支付 -->
+  <section class="day" data-day="pay">
+    <div class="dayhead"><span class="title">🚉 各景點 車站＋支付方式</span></div>
+    <div class="daysummary">一句話：<b>ICOCA 當主力嗶到底，JR 區段刷 WIDE Pass</b>。下面每個景點標好最近站與付法。</div>
+
+    <div class="card"><div class="body">
+      <h4>💳 支付總原則</h4>
+      <div class="line"><div class="dot" style="background:#6a4a85"></div><div class="txt"><b>ICOCA（IC 卡）＝主力</b>：JR、地下鐵、京阪、阪急、叡電、市巴士／京都巴士、南海、大阪地鐵<b>全都能嗶</b>，免算票價。iPhone 可加到錢包，或買實體卡。</div></div>
+      <div class="line"><div class="dot" style="background:#2f6b57"></div><div class="txt"><b>JR Kansai WIDE Area Pass（11/25–29）</b>：涵蓋 JR 區段——HARUKA、天橋立特急、稲荷／東福寺、嵐山（嵯峨野線）、京都→大阪。走這些 JR 時<b>用 Pass、不用 ICOCA</b>。</div></div>
+      <div class="line"><div class="dot" style="background:#c6861b"></div><div class="txt"><b>現金／當地票</b>：天橋立↔伊根 丹後海陸巴士、展望台纜車等丹後地區，備點現金較保險。</div></div>
+      <div class="line"><div class="dot" style="background:#b4472e"></div><div class="txt"><b>南海 Rapi:t（11/30）</b>：乗車券可用 ICOCA，但 Rapi:t 要<b>另購特急券</b>（¥1,490 已含）；搭空港急行則 ICOCA 直接嗶。</div></div>
+    </div></div>
+
+    <h2 class="sec">11/25 京都市區</h2>
+    <table class="table">
+      <tr><th>景點</th><th>最近站／交通</th><th>支付</th></tr>
+      <tr><td>錦市場・新京極・寺町（駿河屋／animate／Round1）</td><td>阪急「京都河原町」／地下鐵「四条」，之後徒步</td><td>ICOCA</td></tr>
+      <tr><td>鴨川・先斗町</td><td>四条大橋一帶，徒步</td><td>—</td></tr>
+      <tr><td>東寺／渉成園（夜楓・選配）</td><td>東寺＝近鐵「東寺」或徒步；渉成園＝京都站徒步</td><td>ICOCA／徒步</td></tr>
+    </table>
+
+    <h2 class="sec">11/26 天橋立・伊根</h2>
+    <table class="table">
+      <tr><th>景點</th><th>最近站／交通</th><th>支付</th></tr>
+      <tr><td>京都 ⇆ 天橋立</td><td>特急「はしだて」（JR＋京都丹後鐵道）</td><td>✅ WIDE Pass</td></tr>
+      <tr><td>天橋立 ⇆ 伊根</td><td>丹後海陸交通 路線巴士</td><td>現金／當地票</td></tr>
+      <tr><td>展望台（View Land／傘松）</td><td>纜車・吊椅</td><td>現場購票</td></tr>
+    </table>
+
+    <h2 class="sec">11/27 清水寺 → 貴船</h2>
+    <table class="table">
+      <tr><th>景點</th><th>最近站／交通</th><th>支付</th></tr>
+      <tr><td>清水寺</td><td>京阪「清水五条」或「祇園四条」徒步 20–25 分</td><td>京阪＝ICOCA</td></tr>
+      <tr><td>出町柳 → 貴船口</td><td>叡電 鞍馬線「きらら」（約 ¥470）</td><td>ICOCA（套票不划算）</td></tr>
+      <tr><td>貴船口 → 貴船神社</td><td>京都巴士 33「貴船」＋徒步 5 分</td><td>ICOCA</td></tr>
+    </table>
+
+    <h2 class="sec">11/28 伏見稻荷 → 嵐山</h2>
+    <table class="table">
+      <tr><th>景點</th><th>最近站／交通</th><th>支付</th></tr>
+      <tr><td>伏見稻荷大社</td><td>JR 奈良線「稲荷」下車即到</td><td>✅ WIDE Pass</td></tr>
+      <tr><td>東福寺（選配）</td><td>JR 奈良線「東福寺」</td><td>✅ WIDE Pass</td></tr>
+      <tr><td>嵐山（渡月橋・竹林・天龍寺）</td><td>JR 嵯峨野線「嵯峨嵐山」（京都站轉車）</td><td>✅ WIDE Pass</td></tr>
+    </table>
+
+    <h2 class="sec">11/29 京都 → 大阪</h2>
+    <table class="table">
+      <tr><th>景點</th><th>最近站／交通</th><th>支付</th></tr>
+      <tr><td>京都アバンティ（動漫＋プリサロン）</td><td>京都站八条口，徒步 1 分</td><td>—（徒步）</td></tr>
+      <tr><td>京都 → 大阪</td><td>JR 新快速（Pass 第 5 天）</td><td>✅ WIDE Pass</td></tr>
+      <tr><td>大阪（梅田）→ 心齋橋</td><td>地下鐵 御堂筋線</td><td>ICOCA</td></tr>
+      <tr><td>心齋橋・道頓堀・日本橋オタロード</td><td>御堂筋線／徒步</td><td>ICOCA／徒步</td></tr>
+    </table>
+
+    <h2 class="sec">11/30 心齋橋 → 關西機場</h2>
+    <table class="table">
+      <tr><th>段</th><th>交通</th><th>支付</th></tr>
+      <tr><td>心齋橋 → 難波</td><td>地下鐵 御堂筋線 1 站</td><td>ICOCA</td></tr>
+      <tr><td>難波 → 關西機場</td><td>南海 Rapi:t（¥1,490）／空港急行（¥970）</td><td>Rapi:t＝乗車券ICOCA＋特急券；空港急行＝ICOCA</td></tr>
+    </table>
+    <p class="muted" style="font-size:12.5px">票價／涵蓋為查詢時資訊，可能變動。叡電 5 區間約 ¥470、えぇきっぷ ¥1,200、鞍馬貴船日帰りきっぷ ¥2,100，出發前以官方為準。</p>
+  </section>
+
+  <footer>
+    <h4>資料來源與備註</h4>
+    <div>· 交通票價／時間：Money101（2026/11 HARUKA 外國旅客優惠單程 ¥2,700）、JR 西日本、南海電鐵、京都丹後鐵道相關整理。<span class="tag">查詢日 2026-11-19</span></div>
+    <div>· 紅葉見頃：日本氣象株式会社第 1 回預測（京都市區楓葉約 12/11、銀杏約 11/27）。</div>
+    <div>· 清水寺拜觀 6:00–18:00、秋季夜間特別拜觀 2025 為 11/22–12/7（2026 待官網）；伏見稻荷 24h 免費。</div>
+    <div>· 和服店營業約 9:00–18:00、當日／飯店歸還，建議 Klook／KKday 預約。</div>
+    <div>· 飯店位置：ホテル京阪 京都駅南（JR 京都站八条西口徒步 1 分）、HOTEL MYSTAYS 心斎橋（御堂筋線心齋橋站 7 號出口徒步 2 分，西心斎橋 1-9-30）。</div>
+    <div style="margin-top:8px;color:#999">※ 所有時刻為規劃建議，實際班次與票價以當日官方網站為準。</div>
+  </footer>
+</div>
+
+<script>
+  var tabs=document.querySelectorAll('.tab');
+  var days=document.querySelectorAll('.day');
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){
+      var d=t.getAttribute('data-day');
+      tabs.forEach(function(x){x.classList.remove('active')});
+      t.classList.add('active');
+      days.forEach(function(s){s.classList.toggle('active',s.getAttribute('data-day')===d)});
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
